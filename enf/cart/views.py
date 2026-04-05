@@ -32,7 +32,7 @@ class CartModalView(CartMixin, View):
         cart = self.get_cart(request)
         context = {
                 'cart': cart,
-                'cart_item': cart.items.select_related(
+                'cart_items': cart.items.select_related(
                     'product',
                     'product_size__size'
                 ).order_by('added_at')
@@ -40,8 +40,8 @@ class CartModalView(CartMixin, View):
         return TemplateResponse(request, 'cart/cart_modal.html', context)
     
 
-@transaction.atomic
 class AddToCartView(CartMixin, View):
+    @transaction.atomic
     def post(self, request, slug):
         cart = self.get_cart(request)
         product = get_object_or_404(Product, slug=slug)
@@ -108,7 +108,7 @@ class UpdateCartItemView(CartMixin, View):
         cart = self.get_cart(request)
         cart_item = get_object_or_404(CartItem, id=item_id, cart=cart)
 
-        quantity = request.POST.get('quantity', 1)
+        quantity = int(request.POST.get('quantity', 1))
 
         if quantity < 0:
             return JsonResponse({

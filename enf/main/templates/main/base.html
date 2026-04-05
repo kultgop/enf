@@ -294,7 +294,21 @@
                 if (mobileCart) mobileCart.textContent = cartText;
                 if (mobileCartHeader) mobileCartHeader.textContent = cartText;
             }
-        
+            
+            function updateCartCount() {
+                fetch('{% url "cart:cart_count" %}')
+                    .then(response => response.json())
+                    .then(data => {
+                        updateHeaderCartCount(data.total_items);
+                    });
+            }
+    
+            function openCart() {
+                htmx.ajax('GET', '{% url "cart:cart_modal" %}', {
+                    target: '#cart-container',
+                    swap: 'innerHTML'
+                });
+            }
     
             [desktopCart, mobileCart, mobileCartHeader].forEach(cartLink => {
                 if (cartLink) {
