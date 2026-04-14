@@ -18,9 +18,9 @@ def register(request):
             user = form.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('main:index')
-        else:
-            form = CustomUserCreationForm()
-        return render(request, 'users/register.html', context={'form': form})
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'users/register.html', {'form': form})
     
 
 def login_view(request):
@@ -30,9 +30,9 @@ def login_view(request):
             user = form.get_user()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('main:index')
-        else:
-            form = CustomUserLoginForm()
-        return render(request, 'users/login.html', context={'form': form})
+    else:
+        form = CustomUserLoginForm()
+    return render(request, 'users/login.html', context={'form': form})
     
 
 @login_required(login_url='/users/login')
@@ -79,8 +79,8 @@ def update_account_details(request):
             updated_user = CustomUser.objects.get(id=user.id)
             request.user = updated_user
             if request.headers.get('HX-Request'):
-                return TemplateResponse(request, 'users/partials/account_datails.html', {'user': updated_user})
-            return TemplateResponse(request, 'users/partials/account_datails.html', {'user': updated_user})
+                return TemplateResponse(request, 'users/partials/account_details.html', {'user': updated_user})
+            return TemplateResponse(request, 'users/partials/account_details.html', {'user': updated_user})
         else:
             return TemplateResponse(request, 'users/partials/edit_account_details.html',
                             {'user': request.user, 'form': form})
