@@ -53,6 +53,9 @@ class Cart(models.Model):
         except CartItem.DoesNotExist:
             return False
         
+    def clear(self):
+        self.items.all().delete()
+        
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
